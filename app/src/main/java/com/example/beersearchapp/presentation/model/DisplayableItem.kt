@@ -1,0 +1,3 @@
+package com.example.beersearchapp.presentation.model
+
+interface DisplayableItem
