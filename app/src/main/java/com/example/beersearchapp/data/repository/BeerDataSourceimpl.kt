@@ -7,4 +7,8 @@ class BeerDataSourceimpl(private val beerRemoteSource: BeerRemoteSource) : BeerD
     override fun getBeerList(): Single<List<BeerEntity>> {
         return beerRemoteSource.getBeerList()
     }
+
+    override fun getBeerListPagination(pageCount: Int): Single<List<BeerEntity>> {
+        return beerRemoteSource.getBeerListPagination(pageCount)
+    }
 }

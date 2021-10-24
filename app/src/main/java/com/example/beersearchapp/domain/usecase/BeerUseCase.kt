@@ -8,4 +8,8 @@ class BeerUseCase(private val beerRepository: BeerRepository) {
     fun getBeerList() : Single<List<Beer>> {
         return beerRepository.getBeerList()
     }
+
+    fun getBeerListPagination(pageCount : Int) : Single<List<Beer>> {
+        return beerRepository.getBeerListPagination(pageCount)
+    }
 }

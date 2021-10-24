@@ -5,4 +5,5 @@ import io.reactivex.rxjava3.core.Single
 
 interface BeerDataSource {
     fun getBeerList() : Single<List<BeerEntity>>
+    fun getBeerListPagination(pageCount : Int) : Single<List<BeerEntity>>
 }

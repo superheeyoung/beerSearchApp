@@ -12,5 +12,5 @@ data class BeerEntity(
     @SerializedName("description")
     val description : String,
     @SerializedName("image_url")
-    val imgUrl : String
+    val imgUrl : String?
 )
