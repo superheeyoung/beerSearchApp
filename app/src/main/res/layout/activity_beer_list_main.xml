@@ -16,7 +16,7 @@
 
         <EditText
             android:id="@+id/et_search"
-            android:layout_width="100dp"
+            android:layout_width="150dp"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toStartOf="@+id/bt_search"
             app:layout_constraintStart_toStartOf="parent"
@@ -26,7 +26,7 @@
             android:id="@+id/bt_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="찾기"
+            android:text="find"
             app:layout_constraintStart_toEndOf="@+id/et_search"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -36,12 +36,27 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:orientation="vertical"
+        android:overScrollMode="never"
+        android:scrollbars="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/cl_search"
         tools:listitem="@layout/item_beer_option" />
+
+    <TextView
+        android:id="@+id/tv_empty_search_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:textSize="22dp"
+        android:text="검색 결과 없습니다."
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cl_search"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

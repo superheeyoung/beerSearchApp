@@ -3,8 +3,6 @@ package com.example.beersearchapp.data.entity
 import com.google.gson.annotations.SerializedName
 
 data class BeerEntity(
-    @SerializedName("id")
-    val id : Int,
     @SerializedName("name")
     val name : String,
     @SerializedName("tagline")

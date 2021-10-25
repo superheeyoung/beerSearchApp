@@ -7,13 +7,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.beersearchapp.presentation.model.BeerDisplayableItem
 import com.example.beersearchapp.presentation.model.DisplayableItem
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 
 class BeerAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val delegatesManager = AdapterDelegatesManager<List<DisplayableItem>>()
 
-    private var beerItem = ArrayList<DisplayableItem>()
+    var beerItem = ArrayList<DisplayableItem>()
+    var items = mutableListOf<BeerDisplayableItem>()
 
     fun addItems(items: List<DisplayableItem>) {
         removePagination()
@@ -35,10 +35,10 @@ class BeerAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerV
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        delegatesManager.onBindViewHolder(beerItem, position, holder)
+        delegatesManager.onBindViewHolder(items, position, holder)
     }
 
-    override fun getItemCount() = beerItem.size
+    override fun getItemCount() = items.size
 
 
 }

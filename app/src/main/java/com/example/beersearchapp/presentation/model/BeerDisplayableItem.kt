@@ -5,7 +5,6 @@ import kotlinx.android.parcel.Parcelize
 
 @Parcelize
 data class BeerDisplayableItem (
-    val id: Int,
     val name: String,
     val tagline: String,
     val description: String,

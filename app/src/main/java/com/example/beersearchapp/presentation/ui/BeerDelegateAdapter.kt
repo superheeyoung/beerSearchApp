@@ -35,7 +35,6 @@ class BeerDelegateAdapter(private val context : Context, private val itemClick: 
             Glide.with(context).load(item.imgUrl).into(img_beer)
             tv_name.text = item.name
             tv_tag.text = item.tagline
-            tv_order.text = item.id.toString()
 
             itemView.setOnClickListener {
                 itemClick?.invoke(item)

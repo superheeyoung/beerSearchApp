@@ -7,7 +7,7 @@ import com.example.beersearchapp.presentation.model.BeerModel
 class BeerModelMapper {
     fun transform(target : List<Beer>) : List<BeerDisplayableItem> = with(target) {
         return map { beer ->
-            BeerDisplayableItem(beer.id, beer.name, beer.tagline, beer.description, beer.imgUrl)
+            BeerDisplayableItem(beer.name, beer.tagline, beer.description, beer.imgUrl)
         }
     }
 }

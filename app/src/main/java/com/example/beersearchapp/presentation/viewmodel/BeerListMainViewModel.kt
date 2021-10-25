@@ -1,13 +1,14 @@
 package com.example.beersearchapp.presentation.viewmodel
 
 import android.util.Log
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.beersearchapp.domain.usecase.BeerUseCase
 import com.example.beersearchapp.presentation.mapper.BeerModelMapper
 import com.example.beersearchapp.presentation.model.BeerDisplayableItem
 import com.example.beersearchapp.presentation.model.BeerModel
-import com.example.beersearchapp.presentation.util.SingleLiveEvent
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
@@ -20,7 +21,8 @@ class BeerListMainViewModel(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    val beerEvent = SingleLiveEvent<List<BeerDisplayableItem>>()
+    val beerEvent = MutableLiveData<List<BeerDisplayableItem>>()
+    var beerList : ArrayList<BeerDisplayableItem> = arrayListOf()
 
     fun getBeer() {
         compositeDisposable +=
@@ -28,8 +30,9 @@ class BeerListMainViewModel(
                 .map(beerModelMapper::transform)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { beerList ->
-                    beerEvent.value = beerList
+                .subscribeBy { beer ->
+                    beerEvent.value = beer
+                    this.beerList.addAll(beer)
                 }
     }
 
@@ -40,12 +43,30 @@ class BeerListMainViewModel(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeBy(
-                    onSuccess = { beerList ->
+                    onSuccess = { beer ->
+                        this.beerList.addAll(beer)
                         beerEvent.value = beerList
-                        Log.d("debug222", beerList.toString())
                     }, onError = {
-                        Log.d("debug222-e", it.toString())
                     }
                 )
+    }
+
+    fun search(name: String) {
+        compositeDisposable += Single.defer {
+            Single.just(
+                beerList.filter { it.name.uppercase().contains(name) }
+            )
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onSuccess = {
+                    if(it.isEmpty()) beerEvent.value = arrayListOf()
+                    else beerEvent.value = it
+                },
+                onError = {
+                    beerEvent.value = beerList
+                }
+            )
     }
 }
