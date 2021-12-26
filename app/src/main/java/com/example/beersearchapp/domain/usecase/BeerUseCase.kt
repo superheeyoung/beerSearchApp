@@ -5,11 +5,7 @@ import com.example.beersearchapp.domain.repository.BeerRepository
 import io.reactivex.rxjava3.core.Single
 
 class BeerUseCase(private val beerRepository: BeerRepository) {
-    fun getBeerList() : Single<List<Beer>> {
+    fun getBeerList(): Single<List<Beer>> {
         return beerRepository.getBeerList()
-    }
-
-    fun getBeerListPagination(pageCount : Int) : Single<List<Beer>> {
-        return beerRepository.getBeerListPagination(pageCount)
     }
 }

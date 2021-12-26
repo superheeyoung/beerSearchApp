@@ -30,13 +30,19 @@ class BeerListMainViewModel(
                 .map(beerModelMapper::transform)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeBy { beer ->
-                    beerEvent.value = beer
-                    this.beerList.addAll(beer)
-                }
+                .subscribeBy(
+                    onSuccess = { beer ->
+                        beerEvent.value = beer
+                        this.beerList.addAll(beer)
+                    }, onError = {
+                        Log.d("debug333",it.toString())
+                    }
+                )
+
+
     }
 
-    fun getBeerPagenation(pageCount: Int) {
+   /* fun getBeerPagenation(pageCount: Int) {
         compositeDisposable +=
             beerUseCase.getBeerListPagination(pageCount)
                 .map(beerModelMapper::transform)
@@ -50,7 +56,7 @@ class BeerListMainViewModel(
                     }
                 )
     }
-
+*/
     fun search(name: String) {
         compositeDisposable += Single.defer {
             Single.just(

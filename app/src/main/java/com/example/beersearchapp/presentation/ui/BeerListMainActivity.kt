@@ -1,11 +1,7 @@
 package com.example.beersearchapp.presentation.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
-import android.widget.EditText
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.beersearchapp.R
 import com.example.beersearchapp.presentation.util.afterTextChanged
@@ -30,20 +26,26 @@ class BeerListMainActivity : AppCompatActivity() {
         BeerAdapter(this).apply {
             delegatesManager.addDelegate(BeerDelegateAdapter(this@BeerListMainActivity) {
                 with(this@BeerListMainActivity) {
-                    startActivity(intentFor<BeerDetailActivity>(BeerDetailActivity.EXTRA_BEER_NAME to it.name,
-                    BeerDetailActivity.EXTRA_BEER_TAGLINE to it.tagline,
-                    BeerDetailActivity.EXTRA_DESCRIPTION to it.description,
-                    BeerDetailActivity.EXTRA_IMAGE_URL to it.imgUrl))
+                    startActivity(
+                        intentFor<BeerDetailActivity>(
+                            BeerDetailActivity.EXTRA_BEER_NAME to it.name,
+                            BeerDetailActivity.EXTRA_BEER_TAGLINE to it.tagline,
+                            BeerDetailActivity.EXTRA_DESCRIPTION to it.description,
+                            BeerDetailActivity.EXTRA_IMAGE_URL to it.imgUrl
+                        )
+                    )
                 }
             })
-
         }
     }
 
     private val recyclerviewScrollListener: RecyclerviewScrollListener =
         object : RecyclerviewScrollListener() {
             override fun loadMoreItems(page: Int) {
-                beerListMainViewModel.getBeerPagenation(page)
+                /*
+                * pagination 구현
+                * */
+               // beerListMainViewModel.getBeerPagenation(page)
             }
         }
 
@@ -70,12 +72,12 @@ class BeerListMainActivity : AppCompatActivity() {
 
         beerListMainViewModel.beerEvent.observe(this, {
             it?.let {
-                if(it.isNotEmpty()) {
-                 tv_empty_search_result.isVisible = false
-                 rv_beer.isVisible = true
-                beerAdapter.items = it.toMutableList()
-                beerAdapter.addItems(it)
-                beerAdapter.notifyDataSetChanged()
+                if (it.isNotEmpty()) {
+                    tv_empty_search_result.isVisible = false
+                    rv_beer.isVisible = true
+                    beerAdapter.items = it.toMutableList()
+                    beerAdapter.addItems(it)
+                    beerAdapter.notifyDataSetChanged()
                 } else {
                     tv_empty_search_result.isVisible = true
                     rv_beer.isVisible = false
@@ -88,7 +90,9 @@ class BeerListMainActivity : AppCompatActivity() {
     }
 
     private fun searchBeerSubject() =
-        searchSubject.debounce(300, TimeUnit.MICROSECONDS)
+    //의미 없는 코드
+        //millieseconds
+        searchSubject.debounce(300, TimeUnit.MILLISECONDS)
             .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe {

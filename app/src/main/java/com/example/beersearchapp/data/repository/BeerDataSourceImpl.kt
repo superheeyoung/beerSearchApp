@@ -3,12 +3,9 @@ package com.example.beersearchapp.data.repository
 import com.example.beersearchapp.data.entity.BeerEntity
 import io.reactivex.rxjava3.core.Single
 
-class BeerDataSourceimpl(private val beerRemoteSource: BeerRemoteSource) : BeerDataSource{
+
+class BeerDataSourceImpl(private val beerRemoteSource: BeerRemoteSource) : BeerDataSource {
     override fun getBeerList(): Single<List<BeerEntity>> {
         return beerRemoteSource.getBeerList()
-    }
-
-    override fun getBeerListPagination(pageCount: Int): Single<List<BeerEntity>> {
-        return beerRemoteSource.getBeerListPagination(pageCount)
     }
 }

@@ -13,8 +13,7 @@ import java.util.concurrent.TimeUnit
 val retrofitModule = module {
     single { httpClient() }
     single { createRetrofit(get(), "https://api.punkapi.com/v2/") }
-    single { createApi<BeerApi> (get())}
-    //single { makeApi<BeerApi>(get(),"https://api.punkapi.com/v2/beers") }
+    single { createApi<BeerApi>(get()) }
 }
 
 private fun httpClient(): OkHttpClient {
@@ -45,20 +44,7 @@ private fun createRetrofit(
         .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build()
 }
 
-private inline fun <reified T> makeApi(
-    okHttpClient: OkHttpClient, url: String
-): T {
-    val gson = GsonBuilder()
-        .setLenient()
-        .create()
 
-    val retrofit = Retrofit.Builder()
-        .baseUrl(url)
-        .client(okHttpClient)
-        .addConverterFactory(GsonConverterFactory.create(gson))
-        .addCallAdapterFactory(RxJava3CallAdapterFactory.create()).build()
-    return retrofit.create(T::class.java)
-}
 private inline fun <reified T> createApi(
     retrofit: Retrofit
 ): T {

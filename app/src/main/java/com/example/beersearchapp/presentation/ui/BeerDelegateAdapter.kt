@@ -18,7 +18,7 @@ class BeerDelegateAdapter(private val context : Context, private val itemClick: 
         return items[position] is BeerDisplayableItem
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup): RecyclerView.ViewHolder { //viewholer 생성 후 return
         return ViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.item_beer_option, parent, false)
         )
@@ -36,6 +36,7 @@ class BeerDelegateAdapter(private val context : Context, private val itemClick: 
             tv_name.text = item.name
             tv_tag.text = item.tagline
 
+            //onCreateViewHolder로 변경
             itemView.setOnClickListener {
                 itemClick?.invoke(item)
             }

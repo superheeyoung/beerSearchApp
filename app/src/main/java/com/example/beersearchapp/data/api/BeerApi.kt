@@ -7,9 +7,8 @@ import retrofit2.http.Query
 
 interface BeerApi {
     @GET("beers")
-    fun getBeerList(@Query("page") pageCount : Int = 1,@Query("per_page") perPage : Int = 80) : Single<List<BeerEntity>>
-
-    @GET("beers")
-    fun getBeerListPagenation(@Query("page") pageCount : Int,
-    @Query("per_page") perPage : Int = 80) : Single<List<BeerEntity>>
+    fun getBeerList(
+        @Query("page") pageCount: Int = 1,
+        @Query("per_page") perPage: Int = 80
+    ): Single<List<BeerEntity>>
 }

@@ -31,10 +31,13 @@ class BeerAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerV
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        //TODO viewType 같이 공부
+        //layoutManager 3개
         delegatesManager.onCreateViewHolder(parent, viewType)
 
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        //재사용 했을 때 계속 들어옴 if문으로 ui바꿀 때 else문 꼭 추가하기
         delegatesManager.onBindViewHolder(items, position, holder)
     }
 

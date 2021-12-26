@@ -12,8 +12,4 @@ class BeerRepositoryImpl(
     override fun getBeerList(): Single<List<Beer>> {
         return beerDataSource.getBeerList().map(beerEntityMapper::transform)
     }
-
-    override fun getBeerListPagination(pageCount: Int): Single<List<Beer>> {
-        return beerDataSource.getBeerListPagination(pageCount).map(beerEntityMapper::transform)
-    }
 }

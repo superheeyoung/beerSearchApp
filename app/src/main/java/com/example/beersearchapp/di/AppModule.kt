@@ -15,7 +15,7 @@ val remoteSourceModule = module {
 }
 
 val dataSourceModule = module {
-    single<BeerDataSource> { BeerDataSourceimpl(get())}
+    single<BeerDataSource> { BeerDataSourceImpl(get())}
 }
 
 val repositoryModule = module {
