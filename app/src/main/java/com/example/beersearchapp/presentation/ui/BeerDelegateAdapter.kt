@@ -13,7 +13,7 @@ import com.example.beersearchapp.presentation.model.DisplayableItem
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegate
 import kotlinx.android.synthetic.main.item_beer_option.*
 
-class BeerDelegateAdapter(private val context : Context, private val itemClick: (BeerDisplayableItem) -> Unit) : AdapterDelegate<List<DisplayableItem>>(){
+class BeerDelegateAdapter(private val itemClick: (BeerDisplayableItem) -> Unit) : AdapterDelegate<List<DisplayableItem>>(){
     override fun isForViewType(items: List<DisplayableItem>, position: Int): Boolean {
         return items[position] is BeerDisplayableItem
     }
@@ -32,7 +32,9 @@ class BeerDelegateAdapter(private val context : Context, private val itemClick: 
     ) {
         val item = items[position] as BeerDisplayableItem
         with(holder as ViewHolder) {
-            Glide.with(context).load(item.imgUrl).into(img_beer)
+            Glide.with(img_beer)
+                .load(item.imgUrl)
+                .into(img_beer)
             tv_name.text = item.name
             tv_tag.text = item.tagline
 

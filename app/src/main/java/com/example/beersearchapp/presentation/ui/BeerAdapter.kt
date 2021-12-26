@@ -8,7 +8,7 @@ import com.example.beersearchapp.presentation.model.BeerDisplayableItem
 import com.example.beersearchapp.presentation.model.DisplayableItem
 import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager
 
-class BeerAdapter(private val context: Context) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BeerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     val delegatesManager = AdapterDelegatesManager<List<DisplayableItem>>()
 

@@ -3,6 +3,7 @@ package com.example.beersearchapp.presentation.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.example.beersearchapp.R
 import com.example.beersearchapp.presentation.util.afterTextChanged
 import com.example.beersearchapp.presentation.util.launchActivity
@@ -27,12 +28,13 @@ class BeerListMainActivity : AppCompatActivity() {
         BeerAdapter(this).apply {
             delegatesManager.addDelegate(BeerDelegateAdapter(this@BeerListMainActivity) {
                 with(this@BeerListMainActivity) {
-                    launchActivity<BeerDetailActivity> {
-                        putExtra(BeerDetailActivity.EXTRA_BEER_NAME, it.name)
-                        putExtra(BeerDetailActivity.EXTRA_BEER_TAGLINE, it.tagline)
-                        putExtra(BeerDetailActivity.EXTRA_DESCRIPTION, it.description)
-                        putExtra(BeerDetailActivity.EXTRA_IMAGE_URL, it.imgUrl)
-                    }
+                    launchActivity<BeerDetailActivity>(
+                        BeerDetailActivity.EXTRA_BEER_NAME to it.name,
+                        BeerDetailActivity.EXTRA_BEER_TAGLINE to it.tagline,
+                        BeerDetailActivity.EXTRA_DESCRIPTION to it.description,
+                        BeerDetailActivity.EXTRA_IMAGE_URL to it.imgUrl,
+                    )
+
                 }
             })
         }
@@ -56,6 +58,9 @@ class BeerListMainActivity : AppCompatActivity() {
             beerListMainViewModel.search(et_search.text.toString().uppercase())
         }
 
+        et_search.doAfterTextChanged {
+
+        }
         et_search.afterTextChanged {
             searchSubject.onNext(it)
         }
