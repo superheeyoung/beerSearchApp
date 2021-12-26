@@ -5,7 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import com.example.beersearchapp.R
 import com.example.beersearchapp.presentation.util.afterTextChanged
-import com.example.beersearchapp.presentation.util.intentFor
+import com.example.beersearchapp.presentation.util.launchActivity
 import com.example.beersearchapp.presentation.viewmodel.BeerListMainViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.disposables.CompositeDisposable
@@ -19,6 +19,7 @@ class BeerListMainActivity : AppCompatActivity() {
     private val compositDisposable: CompositeDisposable by lazy {
         CompositeDisposable()
     }
+
     private val beerListMainViewModel: BeerListMainViewModel by viewModel()
     private val searchSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
@@ -26,14 +27,12 @@ class BeerListMainActivity : AppCompatActivity() {
         BeerAdapter(this).apply {
             delegatesManager.addDelegate(BeerDelegateAdapter(this@BeerListMainActivity) {
                 with(this@BeerListMainActivity) {
-                    startActivity(
-                        intentFor<BeerDetailActivity>(
-                            BeerDetailActivity.EXTRA_BEER_NAME to it.name,
-                            BeerDetailActivity.EXTRA_BEER_TAGLINE to it.tagline,
-                            BeerDetailActivity.EXTRA_DESCRIPTION to it.description,
-                            BeerDetailActivity.EXTRA_IMAGE_URL to it.imgUrl
-                        )
-                    )
+                    launchActivity<BeerDetailActivity> {
+                        putExtra(BeerDetailActivity.EXTRA_BEER_NAME, it.name)
+                        putExtra(BeerDetailActivity.EXTRA_BEER_TAGLINE, it.tagline)
+                        putExtra(BeerDetailActivity.EXTRA_DESCRIPTION, it.description)
+                        putExtra(BeerDetailActivity.EXTRA_IMAGE_URL, it.imgUrl)
+                    }
                 }
             })
         }
@@ -45,7 +44,7 @@ class BeerListMainActivity : AppCompatActivity() {
                 /*
                 * pagination 구현
                 * */
-               // beerListMainViewModel.getBeerPagenation(page)
+                // beerListMainViewModel.getBeerPagenation(page)
             }
         }
 
@@ -90,8 +89,6 @@ class BeerListMainActivity : AppCompatActivity() {
     }
 
     private fun searchBeerSubject() =
-    //의미 없는 코드
-        //millieseconds
         searchSubject.debounce(300, TimeUnit.MILLISECONDS)
             .distinctUntilChanged()
             .observeOn(AndroidSchedulers.mainThread())
