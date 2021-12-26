@@ -4,15 +4,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.beersearchapp.R
-import com.example.beersearchapp.presentation.util.*
+import com.example.beersearchapp.presentation.util.extraNotNull
 import kotlinx.android.synthetic.main.activity_beer_detail.*
 
-class BeerDetailActivity: AppCompatActivity() {
+class BeerDetailActivity : AppCompatActivity() {
     companion object {
-        val EXTRA_BEER_NAME = "extra_beer_name"
-        val EXTRA_BEER_TAGLINE = "extra_beer_tagline"
-        val EXTRA_DESCRIPTION = "extra_description"
-        val EXTRA_IMAGE_URL = "extra_image_url"
+        private const val EXTRA_BEER_NAME = "extra_beer_name"
+        private const val EXTRA_BEER_TAGLINE = "extra_beer_tagline"
+        private const val EXTRA_DESCRIPTION = "extra_description"
+        private const val EXTRA_IMAGE_URL = "extra_image_url"
     }
 
     private val beerName by extraNotNull(EXTRA_BEER_NAME, "")

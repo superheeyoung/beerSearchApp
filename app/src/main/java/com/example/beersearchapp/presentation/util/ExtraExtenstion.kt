@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import androidx.core.os.bundleOf
 
 inline fun <reified T : Any> Activity.extraNotNull(key: String, default: T? = null) = lazy {
     val value = intent?.extras?.get(key)
@@ -12,17 +13,11 @@ inline fun <reified T : Any> Activity.extraNotNull(key: String, default: T? = nu
 }
 
 inline fun <reified T : Any> Context.launchActivity (
-    options: Bundle? = null,
-    noinline init: Intent.() -> Unit = {})
-{
+    vararg pairs: Pair<String, Any?>
+) {
     val intent = newIntent<T>(this)
-    intent.init()
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN)
-    {
-        startActivity(intent, options)
-    } else {
-        startActivity(intent)
-    }
+    intent.putExtras(bundleOf(*pairs))
+    startActivity(intent)
 }
 
 inline fun <reified T : Any> newIntent(context: Context): Intent =
