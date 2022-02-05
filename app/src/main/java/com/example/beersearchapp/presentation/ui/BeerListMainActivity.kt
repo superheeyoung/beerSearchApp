@@ -3,8 +3,8 @@ package com.example.beersearchapp.presentation.ui
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import com.example.beersearchapp.R
-import com.example.beersearchapp.presentation.util.afterTextChanged
 import com.example.beersearchapp.presentation.util.launchActivity
 import com.example.beersearchapp.presentation.viewmodel.BeerListMainViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -24,15 +24,15 @@ class BeerListMainActivity : AppCompatActivity() {
     private val searchSubject: BehaviorSubject<String> = BehaviorSubject.create()
 
     private val beerAdapter: BeerAdapter by lazy {
-        BeerAdapter(this).apply {
-            delegatesManager.addDelegate(BeerDelegateAdapter(this@BeerListMainActivity) {
+        BeerAdapter().apply {
+            delegatesManager.addDelegate(BeerDelegateAdapter {
                 with(this@BeerListMainActivity) {
-                    launchActivity<BeerDetailActivity> {
-                        putExtra(BeerDetailActivity.EXTRA_BEER_NAME, it.name)
-                        putExtra(BeerDetailActivity.EXTRA_BEER_TAGLINE, it.tagline)
-                        putExtra(BeerDetailActivity.EXTRA_DESCRIPTION, it.description)
-                        putExtra(BeerDetailActivity.EXTRA_IMAGE_URL, it.imgUrl)
-                    }
+                    launchActivity<BeerDetailActivity> (
+                        BeerDetailActivity.EXTRA_BEER_NAME to it.name,
+                        BeerDetailActivity.EXTRA_BEER_TAGLINE to it.tagline,
+                        BeerDetailActivity.EXTRA_DESCRIPTION to it.description,
+                        BeerDetailActivity.EXTRA_IMAGE_URL to it.imgUrl,
+                    )
                 }
             })
         }
@@ -56,8 +56,8 @@ class BeerListMainActivity : AppCompatActivity() {
             beerListMainViewModel.search(et_search.text.toString().uppercase())
         }
 
-        et_search.afterTextChanged {
-            searchSubject.onNext(it)
+        et_search.doAfterTextChanged {
+            searchSubject.onNext(et_search.text.toString())
         }
 
         beerListMainViewModel.getBeer()
@@ -83,7 +83,6 @@ class BeerListMainActivity : AppCompatActivity() {
                 }
             }
         })
-
 
         compositDisposable += searchBeerSubject()
     }

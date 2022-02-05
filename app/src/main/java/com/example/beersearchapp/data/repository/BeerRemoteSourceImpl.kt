@@ -8,5 +8,4 @@ class BeerRemoteSourceImpl(private val beerApi: BeerApi) : BeerRemoteSource {
     override fun getBeerList(): Single<List<BeerEntity>> {
         return beerApi.getBeerList()
     }
-
 }

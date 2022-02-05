@@ -9,10 +9,10 @@ import kotlinx.android.synthetic.main.activity_beer_detail.*
 
 class BeerDetailActivity: AppCompatActivity() {
     companion object {
-        val EXTRA_BEER_NAME = "extra_beer_name"
-        val EXTRA_BEER_TAGLINE = "extra_beer_tagline"
-        val EXTRA_DESCRIPTION = "extra_description"
-        val EXTRA_IMAGE_URL = "extra_image_url"
+        const val EXTRA_BEER_NAME = "extra_beer_name"
+        const val EXTRA_BEER_TAGLINE = "extra_beer_tagline"
+        const val EXTRA_DESCRIPTION = "extra_description"
+        const val EXTRA_IMAGE_URL = "extra_image_url"
     }
 
     private val beerName by extraNotNull(EXTRA_BEER_NAME, "")
