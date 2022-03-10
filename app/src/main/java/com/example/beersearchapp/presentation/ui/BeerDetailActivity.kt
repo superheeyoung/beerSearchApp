@@ -1,11 +1,12 @@
 package com.example.beersearchapp.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.beersearchapp.R
+import com.example.beersearchapp.databinding.ActivityBeerDetailBinding
 import com.example.beersearchapp.presentation.util.*
-import kotlinx.android.synthetic.main.activity_beer_detail.*
 
 class BeerDetailActivity: AppCompatActivity() {
     companion object {
@@ -14,6 +15,7 @@ class BeerDetailActivity: AppCompatActivity() {
         const val EXTRA_DESCRIPTION = "extra_description"
         const val EXTRA_IMAGE_URL = "extra_image_url"
     }
+    private lateinit var binding : ActivityBeerDetailBinding
 
     private val beerName by extraNotNull(EXTRA_BEER_NAME, "")
     private val beerTagLine by extraNotNull(EXTRA_BEER_TAGLINE, "")
@@ -22,13 +24,15 @@ class BeerDetailActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_beer_detail)
 
+        binding = ActivityBeerDetailBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
 
-        Glide.with(this).load(beerImageUrl).into(img_beer_detail)
-        tv_beer_name.text = "맥주 이름 : $beerName"
-        tv_beer_tagline.text = "맥주 tagline : $beerTagLine"
-        tv_beer_description.text = "맥주 설명 : $beerDescription"
+        Glide.with(this).load(beerImageUrl).into(binding.imgBeerDetail)
+        binding.tvBeerName.text = "맥주 이름 : $beerName"
+        binding.tvBeerTagline.text = "맥주 tagline : $beerTagLine"
+        binding.tvBeerDescription.text = "맥주 설명 : $beerDescription"
     }
 }
 

@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.beersearchapp.domain.usecase.BeerUseCase
 import com.example.beersearchapp.presentation.mapper.BeerModelMapper
-import com.example.beersearchapp.presentation.model.BeerDisplayableItem
 import com.example.beersearchapp.presentation.model.BeerModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
@@ -21,8 +20,8 @@ class BeerListMainViewModel(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    val beerEvent = MutableLiveData<List<BeerDisplayableItem>>()
-    var beerList : ArrayList<BeerDisplayableItem> = arrayListOf()
+    val beerEvent = MutableLiveData<List<BeerModel>>()
+    var beerList : ArrayList<BeerModel> = arrayListOf()
 
     fun getBeer() {
         compositeDisposable +=

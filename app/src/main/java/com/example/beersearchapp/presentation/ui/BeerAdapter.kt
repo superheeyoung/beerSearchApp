@@ -1,44 +1,56 @@
 package com.example.beersearchapp.presentation.ui
 
+import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.beersearchapp.presentation.model.BeerDisplayableItem
-import com.example.beersearchapp.presentation.model.DisplayableItem
-import com.hannesdorfmann.adapterdelegates4.AdapterDelegatesManager
+import com.bumptech.glide.Glide
+import com.example.beersearchapp.R
+import com.example.beersearchapp.databinding.ItemBeerOptionBinding
+import com.example.beersearchapp.presentation.model.BeerModel
 
-class BeerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class BeerAdapter(
+    private val onClick: (BeerModel) -> Unit
+) : RecyclerView.Adapter<BeerAdapter.BeerViewHolder>() {
 
-    val delegatesManager = AdapterDelegatesManager<List<DisplayableItem>>()
+    var beerList = listOf<BeerModel>()
 
-    var beerItem = ArrayList<DisplayableItem>()
-    var items = mutableListOf<BeerDisplayableItem>()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BeerViewHolder {
+        val bindingView =
+            LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_beer_option, parent, false)
+        return BeerViewHolder(ItemBeerOptionBinding.bind(bindingView), onClick)
+    }
 
-    fun addItems(items: List<DisplayableItem>) {
-        removePagination()
-        beerItem.addAll(items)
-        if (items.isNotEmpty()) {
-            notifyItemRangeInserted(beerItem.size, items.size)
+    override fun onBindViewHolder(holder: BeerViewHolder, position: Int) {
+        holder.bind(beerList[position])
+    }
+
+    class BeerViewHolder(
+        var viewBinding: ItemBeerOptionBinding,
+        val onClick: (BeerModel) -> Unit
+    ) : RecyclerView.ViewHolder(viewBinding.root) {
+        private var currentBeer: BeerModel? = null
+
+        init {
+            viewBinding.clBeerOption.setOnClickListener {
+                currentBeer?.let {
+                    onClick(it)
+                }
+            }
+        }
+
+        fun bind(beerItem: BeerModel) {
+            currentBeer = beerItem
+            Glide.with(viewBinding.imgBeer)
+                .load(beerItem.imgUrl)
+                .into(viewBinding.imgBeer)
+            viewBinding.tvName.text = beerItem.name
+            viewBinding.tvTag.text = beerItem.tagline
         }
     }
 
-    fun removePagination() {
-        if (beerItem.isNotEmpty() && beerItem[beerItem.size - 1] is DisplayableItem) {
-            beerItem.removeAt(beerItem.size - 1)
-        }
+    override fun getItemCount(): Int {
+        return beerList.size
     }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        //TODO viewType 같이 공부
-        //layoutManager 3개
-        delegatesManager.onCreateViewHolder(parent, viewType)
-
-
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        //재사용 했을 때 계속 들어옴 if문으로 ui바꿀 때 else문 꼭 추가하기
-        delegatesManager.onBindViewHolder(items, position, holder)
-    }
-
-    override fun getItemCount() = items.size
-
 
 }

@@ -24,8 +24,6 @@ abstract class RecyclerviewScrollListener : RecyclerView.OnScrollListener() {
             }
         }
     }
-/*
-    private fun allowLoadMore() = !isLoading() && !isLastPage()*/
 
     private fun isNearToLastItem(lm: RecyclerView.LayoutManager): Boolean {
         when (lm) {
