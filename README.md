@@ -4,3 +4,4 @@
 3. ViewBinding 
 4. Clean Architecture
 5. pagination
+6. MVVM Pattern
