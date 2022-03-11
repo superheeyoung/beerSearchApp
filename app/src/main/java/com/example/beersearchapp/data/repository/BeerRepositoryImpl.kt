@@ -9,7 +9,7 @@ class BeerRepositoryImpl(
     private val beerDataSource: BeerDataSource,
     private val beerEntityMapper: BeerEntityMapper
 ) : BeerRepository {
-    override fun getBeerList(): Single<List<Beer>> {
-        return beerDataSource.getBeerList().map(beerEntityMapper::transform)
+    override fun getBeerList(page: Int, pageCount: Int): Single<List<Beer>> {
+        return beerDataSource.getBeerList(page, pageCount).map(beerEntityMapper::transform)
     }
 }

@@ -5,7 +5,7 @@ import com.example.beersearchapp.data.entity.BeerEntity
 import io.reactivex.rxjava3.core.Single
 
 class BeerRemoteSourceImpl(private val beerApi: BeerApi) : BeerRemoteSource {
-    override fun getBeerList(): Single<List<BeerEntity>> {
-        return beerApi.getBeerList()
+    override fun getBeerList(page: Int, pageCount: Int): Single<List<BeerEntity>> {
+        return beerApi.getBeerList(page)
     }
 }

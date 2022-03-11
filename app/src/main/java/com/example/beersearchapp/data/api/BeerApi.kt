@@ -9,6 +9,6 @@ interface BeerApi {
     @GET("beers")
     fun getBeerList(
         @Query("page") pageCount: Int = 1,
-        @Query("per_page") perPage: Int = 80
+        @Query("per_page") perPage: Int = 20
     ): Single<List<BeerEntity>>
 }

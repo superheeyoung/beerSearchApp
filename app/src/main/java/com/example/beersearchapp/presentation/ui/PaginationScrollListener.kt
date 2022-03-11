@@ -5,11 +5,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 
-abstract class RecyclerviewScrollListener : RecyclerView.OnScrollListener() {
+abstract class PaginationScrollListener : RecyclerView.OnScrollListener() {
     protected abstract fun loadMoreItems(page: Int)
-    //abstract fun isLoading(): Boolean
+    abstract fun getTotalPageCount(): Int
+    abstract fun isLastPage(): Boolean
+    abstract fun isLoading(): Boolean
     private var currentPage = 1
-    private var pastVisibleItems = 3
+    private var pastVisibleItems = 10
     private var visibleItemCount = 0
     private var totalItemCount = 0
 
@@ -17,13 +19,15 @@ abstract class RecyclerviewScrollListener : RecyclerView.OnScrollListener() {
         if (dy > 0) {
             recyclerView.run {
                 layoutManager?.let {
-                    if (/*allowLoadMore() && */isNearToLastItem(it)) {
+                    if (allowLoadMore() && isNearToLastItem(it)) {
                         loadMoreItems(++currentPage)
                     }
                 }
             }
         }
     }
+
+    private fun allowLoadMore() = !isLoading() && !isLastPage()
 
     private fun isNearToLastItem(lm: RecyclerView.LayoutManager): Boolean {
         when (lm) {

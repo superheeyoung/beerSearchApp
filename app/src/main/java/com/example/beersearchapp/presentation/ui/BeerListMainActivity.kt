@@ -1,10 +1,13 @@
 package com.example.beersearchapp.presentation.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.doAfterTextChanged
+import com.example.beersearchapp.presentation.util.Result
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.beersearchapp.databinding.ActivityBeerListMainBinding
 import com.example.beersearchapp.presentation.util.launchActivity
 import com.example.beersearchapp.presentation.viewmodel.BeerListMainViewModel
@@ -16,14 +19,14 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.concurrent.TimeUnit
 
 class BeerListMainActivity : AppCompatActivity() {
-    private lateinit var binding : ActivityBeerListMainBinding
-    private val compositDisposable: CompositeDisposable by lazy {
+    private lateinit var binding: ActivityBeerListMainBinding
+    private val compositeDisposable: CompositeDisposable by lazy {
         CompositeDisposable()
     }
 
-    private val beerAdapter : BeerAdapter by lazy {
+    private val beerAdapter: BeerAdapter by lazy {
         BeerAdapter {
-            launchActivity<BeerDetailActivity> (
+            launchActivity<BeerDetailActivity>(
                 BeerDetailActivity.EXTRA_BEER_NAME to it.name,
                 BeerDetailActivity.EXTRA_BEER_TAGLINE to it.tagline,
                 BeerDetailActivity.EXTRA_DESCRIPTION to it.description,
@@ -34,6 +37,23 @@ class BeerListMainActivity : AppCompatActivity() {
 
     private val beerListMainViewModel: BeerListMainViewModel by viewModel()
     private val searchSubject: BehaviorSubject<String> = BehaviorSubject.create()
+
+    private var isLoading = false
+    private var isLastPage = false
+
+    private val paginationScrollListener: PaginationScrollListener =
+        object : PaginationScrollListener() {
+            override fun loadMoreItems(page: Int) {
+                beerListMainViewModel.loadMore(page)
+            }
+
+            override fun getTotalPageCount() = 20
+
+            override fun isLastPage() = isLastPage
+
+            override fun isLoading() = isLoading
+        }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,29 +73,44 @@ class BeerListMainActivity : AppCompatActivity() {
         beerListMainViewModel.getBeer()
 
         with(binding.rvBeer) {
-            isNestedScrollingEnabled = false
             setHasFixedSize(true)
+            addOnScrollListener(paginationScrollListener)
             layoutManager = LinearLayoutManager(this@BeerListMainActivity)
             adapter = beerAdapter
-
         }
 
         beerListMainViewModel.beerEvent.observe(this, {
-            it?.let {
-                if (it.isNotEmpty()) {
-                    binding.tvEmptySearchResult.isVisible = false
-                    binding.rvBeer.isVisible = true
-                    beerAdapter.beerList = it
-                    beerAdapter.notifyDataSetChanged()
+            when (it) {
+                is Result.Loading -> {
+                    binding.prBar.isVisible = true
+                }
+                is Result.Paging -> {
+                    isLoading = true
+                    binding.prBar.isVisible = true
+                }
+                is Result.Success -> {
+                    binding.prBar.isVisible = false
 
-                } else {
-                    binding.tvEmptySearchResult.isVisible = true
-                    binding.rvBeer.isVisible = false
+                    isLastPage = it.data.size < 20
+                    isLoading = false
+
+                    if (it.data.isNotEmpty()) {
+                        binding.tvEmptySearchResult.isVisible = false
+                        binding.rvBeer.isVisible = true
+                        beerAdapter.beerList = it.data
+                        beerAdapter.notifyDataSetChanged()
+                    } else {
+                        binding.tvEmptySearchResult.isVisible = true
+                        binding.rvBeer.isVisible = false
+                    }
+                }
+                is Result.Error -> {
+                    isLoading = false
                 }
             }
         })
 
-        compositDisposable += searchBeerSubject()
+        compositeDisposable += searchBeerSubject()
     }
 
     private fun searchBeerSubject() =

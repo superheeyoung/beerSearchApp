@@ -9,6 +9,7 @@ import com.example.beersearchapp.presentation.model.BeerModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
+import com.example.beersearchapp.presentation.util.Result
 import io.reactivex.rxjava3.kotlin.plusAssign
 import io.reactivex.rxjava3.kotlin.subscribeBy
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -20,8 +21,8 @@ class BeerListMainViewModel(
 
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    val beerEvent = MutableLiveData<List<BeerModel>>()
-    var beerList : ArrayList<BeerModel> = arrayListOf()
+    val beerEvent = MutableLiveData<Result<List<BeerModel>>>()
+    var beerList: ArrayList<BeerModel> = arrayListOf()
 
     fun getBeer() {
         compositeDisposable +=
@@ -29,33 +30,36 @@ class BeerListMainViewModel(
                 .map(beerModelMapper::transform)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { beerEvent.value = Result.Loading }
                 .subscribeBy(
                     onSuccess = { beer ->
-                        beerEvent.value = beer
+                        beerEvent.value = Result.Success(beer)
                         this.beerList.addAll(beer)
                     }, onError = {
-                        Log.d("debug333",it.toString())
+                        beerEvent.value = Result.Error(it)
                     }
                 )
 
 
     }
 
-   /* fun getBeerPagenation(pageCount: Int) {
+    fun loadMore(pageCount: Int) {
         compositeDisposable +=
-            beerUseCase.getBeerListPagination(pageCount)
+            beerUseCase.getBeerList(pageCount)
                 .map(beerModelMapper::transform)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { beerEvent.value = Result.Paging }
                 .subscribeBy(
                     onSuccess = { beer ->
                         this.beerList.addAll(beer)
-                        beerEvent.value = beerList
+                        beerEvent.value = Result.Success(beerList)
                     }, onError = {
+                        beerEvent.value = Result.Error(it)
                     }
                 )
     }
-*/
+
     fun search(name: String) {
         compositeDisposable += Single.defer {
             Single.just(
@@ -66,11 +70,11 @@ class BeerListMainViewModel(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
                 onSuccess = {
-                    if(it.isEmpty()) beerEvent.value = arrayListOf()
-                    else beerEvent.value = it
+                    if (it.isEmpty()) beerEvent.value = Result.Success(arrayListOf())
+                    else beerEvent.value = Result.Success(it)
                 },
                 onError = {
-                    beerEvent.value = beerList
+                    beerEvent.value = Result.Success(beerList)
                 }
             )
     }
